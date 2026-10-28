@@ -1,0 +1,24 @@
+{
+  "name": "desafio-rd-python-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo FullStack com Python (FastAPI) e React (Vite + Rough.js) para o Desafio Técnico RD Station",
+  "author": "Christopher Correa <chriscorrea.marques@gmail.com>",
+  "scripts": {
+    "dev:backend": "cd backend && uvicorn app.main:app --reload --port 8000",
+    "dev:frontend": "pnpm --filter mars-probe-frontend dev",
+    "build:frontend": "pnpm --filter mars-probe-frontend build",
+    "test:backend": "cd backend && pytest --cov=app --cov-report=term-missing",
+    "test:frontend": "pnpm --filter mars-probe-frontend lint",
+    "test": "pnpm test:backend && pnpm test:frontend",
+    "lint:backend": "cd backend && ruff check . && mypy app",
+    "lint:frontend": "pnpm --filter mars-probe-frontend lint",
+    "lint": "pnpm lint:backend && pnpm lint:frontend",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

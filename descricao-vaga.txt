@@ -1,0 +1,58 @@
+Atuação no desenvolvimento de soluções FullStack (React / Python) voltadas à automação, integração com agentes de IA e evolução de plataformas digitais, com maior foco no desenvolvimento Frontend utilizando React, garantindo alta performance, excelente experiência do usuário, escalabilidade e integração eficiente com ecossistemas internos e parceiros.
+
+Responsabilidades
+Desenvolver e manter aplicações FullStack, com atuação predominante no Front-end utilizando React.js, e suporte ao desenvolvimento Back-end em Python
+
+Construir e evoluir interfaces web modernas, responsivas e de alta performance, com foco em experiência e usabilidade
+
+Desenvolver e integrar APIs e microsserviços em Python, garantindo uma comunicação eficiente entre Front-end e Back-end
+
+Participar da evolução de arquiteturas de automação e aplicações distribuídas
+
+Garantir qualidade, escalabilidade, segurança e performance das aplicações, especialmente nas camadas de apresentação e integração
+
+Atuar com boas práticas de engenharia (Clean Code, testes automatizados, observabilidade e documentação)
+
+Participar de decisões técnicas relacionadas à arquitetura, experiência do usuário e evolução dos produtos
+
+Trabalhar de forma colaborativa com times multidisciplinares para entrega contínua de valor
+
+Requisitos obrigatórios
+Experiência sólida com React.js, desenvolvimento de interfaces modernas e aplicações web
+
+Experiência profissional com Python para desenvolvimento Back-end (FastAPI, Flask, Django ou similares)
+
+Vivência com desenvolvimento e integração de APIs REST
+
+Experiência com arquitetura de microsserviços
+
+Experiência com integração entre Front-end e Back-end
+
+Conhecimento sólido em HTML, CSS, JavaScript e TypeScript
+
+Experiência com desenvolvimento de aplicações responsivas, componentes reutilizáveis e boas práticas de Front-end
+
+Experiência com bancos de dados SQL e NoSQL
+
+Conhecimento em protocolos de segurança e autenticação
+
+Conhecimento em cloud (AWS, Azure ou GCP)
+
+Experiência com Git, pipelines de CI/CD e práticas DevOps
+
+Conhecimento em Docker e ambientes containerizados
+
+Experiência com testes automatizados e boas práticas de qualidade de software
+
+Diferenciais
+Experiência com integração de aplicações React com soluções de IA/LLMs
+
+Experiência com UX/UI e otimização de performance Front-end
+
+Experiência com IA Generativa, LLMs ou agentes inteligentes
+
+Experiência com microfrontends
+
+Vivência com arquiteturas orientadas a eventos (Kafka, RabbitMQ, SQS ou similares)
+
+Experiência em aplicações escaláveis, de alta disponibilidade e integradas a diferentes serviços
