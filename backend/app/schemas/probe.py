@@ -13,13 +13,15 @@ class LaunchProbeRequest(BaseModel):
     x: int = Field(
         ...,
         ge=1,
-        description="Coordenada X máxima do canto superior direito da malha (deve ser >= 1).",
+        le=1000,
+        description="Coordenada X máxima da malha (entre 1 e 1000 para proteção contra exaustão de memória).",
         examples=[5],
     )
     y: int = Field(
         ...,
         ge=1,
-        description="Coordenada Y máxima do canto superior direito da malha (deve ser >= 1).",
+        le=1000,
+        description="Coordenada Y máxima da malha (entre 1 e 1000 para proteção contra exaustão de memória).",
         examples=[5],
     )
     direction: Direction = Field(
@@ -55,7 +57,8 @@ class MoveProbeRequest(BaseModel):
     commands: str = Field(
         ...,
         min_length=1,
-        description="Sequência de comandos contendo M (Mover), L (Girar Esquerda), R (Girar Direita).",
+        max_length=1000,
+        description="Sequência de comandos contendo M (Mover), L (Girar Esquerda), R (Girar Direita). Máx 1000 caracteres.",
         examples=["MRM"],
     )
 

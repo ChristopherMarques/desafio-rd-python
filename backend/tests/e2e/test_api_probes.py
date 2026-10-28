@@ -135,3 +135,37 @@ async def test_launch_probe_invalid_direction(async_client: AsyncClient) -> None
         json={"x": 5, "y": 5, "direction": "NORTHEAST"},
     )
     assert res.status_code == 422
+
+
+async def test_owasp_security_headers_present(async_client: AsyncClient) -> None:
+    """Verifica se os cabeçalhos de endurecimento e segurança OWASP estão ativos."""
+    res = await async_client.get("/health")
+    assert res.status_code == 200
+    assert res.headers.get("X-Content-Type-Options") == "nosniff"
+    assert res.headers.get("X-Frame-Options") == "DENY"
+    assert res.headers.get("X-XSS-Protection") == "1; mode=block"
+    assert "max-age=31536000" in res.headers.get("Strict-Transport-Security", "")
+    assert res.headers.get("Referrer-Policy") == "strict-origin-when-cross-origin"
+
+
+async def test_security_input_guardrails_prevent_dos(async_client: AsyncClient) -> None:
+    """Garante que payloads gigantes para esgotamento de recursos são barrados no schema."""
+    # Dimensões excessivas
+    res_dim = await async_client.post(
+        "/probes",
+        json={"x": 99999, "y": 5, "direction": "NORTH"},
+    )
+    assert res_dim.status_code == 422
+
+    # Sequência de comandos abusiva (> 1000 caracteres)
+    launch_res = await async_client.post(
+        "/probes",
+        json={"x": 5, "y": 5, "direction": "NORTH"},
+    )
+    probe_id = launch_res.json()["id"]
+
+    res_huge = await async_client.post(
+        f"/probes/{probe_id}/move",
+        json={"commands": "M" * 1005},
+    )
+    assert res_huge.status_code == 422
