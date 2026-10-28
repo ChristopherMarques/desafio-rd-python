@@ -11,8 +11,8 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_BACKEND: ghcr.io/${{ github.repository_owner }}/desafio-rd-backend
-  IMAGE_FRONTEND: ghcr.io/${{ github.repository_owner }}/desafio-rd-frontend
+  IMAGE_BACKEND: ghcr.io/christophermarques/desafio-rd-backend
+  IMAGE_FRONTEND: ghcr.io/christophermarques/desafio-rd-frontend
 
 jobs:
   build-and-push:
