@@ -18,11 +18,11 @@ logger = logging.getLogger("mars_probe_api")
 openapi_tags = [
     {
         "name": "Sondas Marcianas",
-        "description": "Endpoints principais do Desafio Técnico RD Station para lançamento, movimentação e consulta de telemetria.",
+        "description": "Endpoints que projetei e implementei para o Desafio Técnico RD Station, abrangendo lançamento, movimentação com interrupção segura e consulta de telemetria.",
     },
     {
         "name": "Diagnóstico",
-        "description": "Health check e disponibilidade da API.",
+        "description": "Verificação de integridade e disponibilidade do serviço.",
     },
 ]
 

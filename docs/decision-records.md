@@ -1,6 +1,6 @@
 # Registro de Decisões de Arquitetura (ADRs)
 
-Este documento registra as principais decisões de engenharia adotadas no desenvolvimento da solução, apresentando o contexto, as opções avaliadas, a decisão tomada e as consequências técnicas observadas.
+Este documento registra as principais decisões de engenharia que tomei no desenvolvimento da solução, apresentando o contexto, as opções avaliadas, a decisão tomada e as consequências técnicas observadas.
 
 ---
 
@@ -10,12 +10,12 @@ Este documento registra as principais decisões de engenharia adotadas no desenv
 O desafio exige o desenvolvimento de uma API em Python para controle de sondas marcianas, permitindo qualquer biblioteca ou framework (FastAPI, Flask, Django, etc.).
 
 ### Decisão
-Optamos pelo FastAPI versão 0.115+.
+Optei pelo FastAPI versão 0.115+.
 
 ### Justificativa
 1. O desafio avalia lógica de domínio puro (orientação cardinal, malha cartesiana e validação de comandos). Django traz consigo acoplamento com ORM relacional e serviços administrativos que gerariam sobrecarga desnecessária.
 2. FastAPI oferece tipagem estática moderna via Pydantic v2 e geração automática de documentação Swagger OpenAPI em /docs, alinhando-se ao princípio da RD Station de projetar código fácil de entender.
-3. Desacoplamento arquitetural: nossas entidades de domínio e casos de uso permanecem sem nenhuma importação do FastAPI, permitindo testabilidade total sem necessidade de subir servidores ou emular requisições HTTP em testes unitários.
+3. Desacoplamento arquitetural: mantive as entidades de domínio e casos de uso sem nenhuma importação do FastAPI, permitindo testabilidade total sem necessidade de subir servidores ou emular requisições HTTP em testes unitários.
 
 ---
 
@@ -25,7 +25,7 @@ Optamos pelo FastAPI versão 0.115+.
 A sonda executa comandos de avançar (M), girar à esquerda (L) e girar à direita (R). Requisitos futuros podem demandar novas instruções de exploração.
 
 ### Decisão
-Implementamos o Padrão de Projeto Command (app/domain/commands) coordenado por um CommandRegistry.
+Implementei o Padrão de Projeto Command (app/domain/commands) coordenado por um CommandRegistry.
 
 ### Justificativa
 1. Elimina estruturas condicionais encadeadas (if ou switch) na entidade da sonda e no caso de uso.
@@ -40,7 +40,7 @@ Implementamos o Padrão de Projeto Command (app/domain/commands) coordenado por 
 A especificação do desafio indica que persistência em banco de dados é um item adicional bem-vindo, embora não obrigatório.
 
 ### Decisão
-Criamos a interface abstrata ProbeRepository e duas implementações completas: InMemoryProbeRepository e SqliteProbeRepository.
+Criei a interface abstrata ProbeRepository e duas implementações completas: InMemoryProbeRepository e SqliteProbeRepository.
 
 ### Justificativa
 1. Permite alternar a persistência da aplicação entre memória e SQLite através de uma variável de ambiente (STORAGE_TYPE=sqlite ou STORAGE_TYPE=in_memory) sem alterar uma única linha de regra de negócio ou rota da API.
@@ -55,7 +55,7 @@ Criamos a interface abstrata ProbeRepository e duas implementações completas: 
 A regra da missão declara: se uma sequência inválida for enviada, a sonda não deverá executar ela inteira e retornar uma resposta apropriada a seu critério.
 
 ### Decisão
-Adotamos a estratégia de interrupção preventiva no passo exato da violação com preservação do último estado seguro.
+Adotei a estratégia de interrupção preventiva no passo exato da violação com preservação do último estado seguro.
 
 ### Justificativa
 1. Segurança operacional: a sonda nunca deve cair do planalto marciano. Antes de alterar suas coordenadas, o comando prevê a posição de destino e, caso ultrapasse a fronteira, aborta imediatamente.
@@ -67,10 +67,10 @@ Adotamos a estratégia de interrupção preventiva no passo exato da violação 
 ## ADR 05: Estrutura Monorepo com PNPM Workspaces e Docker Compose
 
 ### Contexto
-Desejávamos entregar uma experiência completa de engenheiro FullStack, unindo o backend robusto em Python com um frontend interativo em React e Vite.
+Desejava entregar uma experiência completa de engenheiro FullStack, unindo o backend robusto em Python com um frontend interativo em React e Vite.
 
 ### Decisão
-Organizamos o repositório como um monorepo com pnpm-workspace.yaml na raiz, separando claramente as pastas backend e frontend, orquestradas por um arquivo docker-compose.yml.
+Organizei o repositório como um monorepo com pnpm-workspace.yaml na raiz, separando claramente as pastas backend e frontend, orquestradas por um arquivo docker-compose.yml.
 
 ### Justificativa
 1. Permite a qualquer avaliador da RD Station clonar o repositório e rodar o projeto completo com um único comando docker compose up.

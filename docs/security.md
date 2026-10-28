@@ -2,11 +2,11 @@
 
 Segurança em engenharia de software não deve ser uma camada adicionada ao final do desenvolvimento nem um obstáculo complexo e burocrático. Ela deve ser simples, pragmática e incorporada nativamente no design da aplicação.
 
-Em conformidade com as regras do desafio da RD Station, implementamos mecanismos essenciais de proteção que asseguram estabilidade e resiliência sem introduzir complexidade desnecessária.
+Em conformidade com as regras do desafio da RD Station, implementei mecanismos essenciais de proteção que asseguram estabilidade e resiliência sem introduzir complexidade desnecessária.
 
 ## 1. Cabeçalhos de Segurança HTTP (OWASP Secure Headers)
 
-Toda resposta emitida pela API passa pelo SecurityHeadersMiddleware (app/core/security.py), aplicando cabeçalhos padronizados pelas diretrizes internacionais do OWASP:
+Configurei o SecurityHeadersMiddleware (app/core/security.py) para interceptar todas as respostas emitidas pela API, aplicando os cabeçalhos recomendados pelas diretrizes internacionais do OWASP:
 
 * X-Content-Type-Options: nosniff
   Evita que navegadores tentem adivinhar o tipo de conteúdo (MIME sniffing), prevenindo ataques onde arquivos de texto ou imagens são interpretados como scripts executáveis.
@@ -23,7 +23,7 @@ Toda resposta emitida pela API passa pelo SecurityHeadersMiddleware (app/core/se
 
 ## 2. Proteção Contra Esgotamento de Recursos e DoS
 
-Aplicações públicas podem sofrer degradação acidental ou intencional quando recebem cargas de dados desproporcionais. Implementamos guardrails rígidos nos schemas de entrada via Pydantic v2 (app/schemas/probe.py):
+Aplicações públicas podem sofrer degradação acidental ou intencional quando recebem cargas de dados desproporcionais. Implementei guardrails rígidos nos schemas de entrada via Pydantic v2 (app/schemas/probe.py):
 
 * Limite de Dimensões da Malha: Os eixos x e y aceitam valores entre 1 e 1000. Isso impede requisições abusivas que solicitem matrizes astronômicas (como 1 bilhão por 1 bilhão), protegendo a memória do servidor contra alocações descontroladas.
 * Limite de Sequência de Comandos: A string commands possui tamanho mínimo de 1 e máximo de 1000 caracteres. Isso evita ataques de negação de serviço por cadeias gigantescas de caracteres que prenderiam o loop de eventos processando milhões de iterações em uma única requisição.
@@ -41,13 +41,13 @@ Para garantir essa invariante:
 
 Expor detalhes como caminhos de arquivos do servidor, versões internas de pacotes ou rastros completos de erro (stack traces) fornece munição valiosa para agentes mal-intencionados realizarem reconhecimento de ambiente.
 
-* O FastAPI intercepta exceções não tratadas através de um handler global em app/main.py.
+* Configurei o FastAPI para interceptar exceções não tratadas através de um handler global em app/main.py.
 * Erros inesperados são logados internamente no servidor para fins de observabilidade pela equipe de engenharia.
 * Para o cliente externo, a API retorna apenas uma mensagem neutra e padronizada em formato JSON com código HTTP 500, protegendo a topologia interna da infraestrutura.
 
 ## 5. Segurança no Ciclo de Vida do Contêiner Docker
 
-Tanto o contêiner do backend quanto o do frontend seguem princípios de menor privilégio:
+Projetei tanto o contêiner do backend quanto o do frontend seguindo princípios de menor privilégio:
 
-* No Dockerfile do backend, criamos um usuário dedicado sem privilégios de administrador (useradd -u 1000 appuser), executando a aplicação fora do escopo de root.
+* No Dockerfile do backend, criei um usuário dedicado sem privilégios de administrador (useradd -u 1000 appuser), executando a aplicação fora do escopo de root.
 * No contêiner Nginx do frontend, arquivos estáticos são copiados em estágio multi-stage, garantindo que dependências de desenvolvimento do Node.js não acompanhem a imagem final de produção.

@@ -1,8 +1,8 @@
 # Especificação dos Contratos de API
 
-A API foi desenvolvida em conformidade estrita com o documento de requisitos do Desafio Técnico da RD Station, disponibilizando endpoints RESTful com payloads JSON tipados e validação automática via Pydantic v2.
+Desenvolvi a API em conformidade estrita com o documento de requisitos do Desafio Técnico da RD Station, disponibilizando endpoints RESTful com payloads JSON tipados e validação automática via Pydantic v2.
 
-Para conveniência de avaliação, todas as rotas estão disponíveis tanto no caminho raiz especificado no desafio (por exemplo, /probes) quanto no prefixo versionado (/api/v1/probes).
+Para conveniência da avaliação, disponibilizei todas as rotas tanto no caminho raiz especificado no desafio (por exemplo, /probes) quanto no prefixo versionado (/api/v1/probes).
 
 ## 1. Lançar Sonda e Configurar Malha
 
@@ -145,7 +145,7 @@ Retorna o estado e a posição atualizada de todas as sondas enviadas em missão
 * Código de Sucesso: 200 OK
 
 ### Descrição do Comportamento
-Endpoint adicional desenvolvido para apoiar a interface visual do painel de missão, retornando as dimensões originais do planalto e a lista completa do rastro percorrido pela sonda (path history) desde o momento do pouso.
+Endpoint adicional que desenvolvi para apoiar a interface visual do painel de missão, retornando as dimensões originais do planalto e a lista completa do rastro percorrido pela sonda (path history) desde o momento do pouso.
 
 ### Resposta de Sucesso (200 OK)
 ```json

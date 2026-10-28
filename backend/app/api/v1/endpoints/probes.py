@@ -71,8 +71,9 @@ async def launch_probe(
     summary="2. Mover sonda",
     description=(
         "Executa uma sequência de comandos (M=Mover 1 espaço, L=Girar 90° à esquerda, "
-        "R=Girar 90° à direita). Se um comando tentar sair da malha ou for inválido, "
-        "a execução é interrompida com segurança e retorna status 422 com o último estado válido mantido."
+        "R=Girar 90° à direita). Projetei a lógica para que, caso um comando tente transpassar "
+        "a fronteira ou seja inválido, a execução seja interrompida com segurança preventiva, "
+        "retornando status 422 com o último estado válido preservado no repositório."
     ),
     responses={
         200: {"model": ProbeStateResponse, "description": "Sequência executada com sucesso."},
@@ -147,7 +148,7 @@ async def list_probes(
     response_model=ProbeDetailResponse,
     status_code=status.HTTP_200_OK,
     summary="4. Ver detalhes e telemetria de uma sonda",
-    description="Retorna dados estendidos da sonda incluindo dimensões do planalto e histórico de passos.",
+    description="Endpoint adicional que implementei para apoiar a telemetria do frontend, retornando dimensões da malha e histórico de passos.",
 )
 async def get_probe_detail(
     probe_id: str,

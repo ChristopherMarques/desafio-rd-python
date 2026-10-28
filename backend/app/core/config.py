@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     app_name: str = "Mars Probe Exploration API"
     app_version: str = "1.0.0"
     app_description: str = (
-        "API RESTful para controle e exploração de sondas em Marte. "
+        "API RESTful que arquitetei e desenvolvi para controle e exploração de sondas em Marte. "
         "Construída com FastAPI e princípios SOLID para o Desafio Técnico RD Station."
     )
     api_prefix: str = "/api/v1"
