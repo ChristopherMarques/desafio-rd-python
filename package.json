@@ -9,7 +9,7 @@
     "dev:frontend": "pnpm --filter mars-probe-frontend dev",
     "build:frontend": "pnpm --filter mars-probe-frontend build",
     "test:backend": "cd backend && pytest --cov=app --cov-report=term-missing",
-    "test:frontend": "pnpm --filter mars-probe-frontend lint",
+    "test:frontend": "pnpm --filter mars-probe-frontend test",
     "test": "pnpm test:backend && pnpm test:frontend",
     "lint:backend": "cd backend && ruff check . && mypy app",
     "lint:frontend": "pnpm --filter mars-probe-frontend lint",

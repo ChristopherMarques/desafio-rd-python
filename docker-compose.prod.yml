@@ -1,0 +1,33 @@
+# Docker Compose para Produção consumindo imagens do GHCR no Coolify
+services:
+  backend:
+    image: ghcr.io/christophermarques/desafio-rd-backend:latest
+    container_name: mars-probe-backend-prod
+    environment:
+      - ENVIRONMENT=production
+      - STORAGE_TYPE=sqlite
+      - SQLITE_DB_PATH=/app/data/mars_probes.db
+      - DEBUG=false
+    volumes:
+      - mars_probe_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  frontend:
+    image: ghcr.io/christophermarques/desafio-rd-frontend:latest
+    container_name: mars-probe-frontend-prod
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mars_probe_data:
+    name: mars_probe_data
