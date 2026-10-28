@@ -299,6 +299,7 @@ Para ler mais detalhes sobre cada decisão técnica, consulte a pasta [`docs/`](
 * [`docs/solid-principles.md`](./docs/solid-principles.md): Análise aprofundada da aplicação dos 5 princípios SOLID no código.
 * [`docs/api-contracts.md`](./docs/api-contracts.md): Especificação completa dos contratos e códigos de retorno da API.
 * [`docs/security.md`](./docs/security.md): Diretrizes de segurança pragmática, OWASP headers e mitigação de DoS.
+* [`docs/deployment.md`](./docs/deployment.md): Guia de deploy contínuo na VPS via Coolify consumindo pacotes do GHCR.
 * [`docs/tangram-design-system.md`](./docs/tangram-design-system.md): Filosofia de design do Tangram Sketch e componentes construídos.
 * [`docs/decision-records.md`](./docs/decision-records.md): Architectural Decision Records (ADRs) com o histórico de trade-offs.
 
