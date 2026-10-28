@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
+import { cn } from "@/lib/utils";
 import type { Direction, PathHistoryStep, ProbeState } from "@/types/probe";
 import { Activity, AlertOctagon, Compass, Footprints, MapPin, Navigation, ShieldCheck } from "lucide-react";
 
@@ -8,6 +9,7 @@ interface TelemetryHUDProps {
   maxX: number;
   maxY: number;
   pathHistory: PathHistoryStep[];
+  className?: string;
 }
 
 export function TelemetryHUD({
@@ -15,10 +17,11 @@ export function TelemetryHUD({
   maxX,
   maxY,
   pathHistory,
+  className,
 }: TelemetryHUDProps) {
   if (!probe) {
     return (
-      <Card className="w-full bg-rd-navy-card/90 border-rd-navy-border shadow-xl backdrop-blur-md">
+      <Card className={cn("w-full bg-rd-navy-card/90 border-rd-navy-border shadow-xl backdrop-blur-md", className)}>
         <CardHeader>
           <CardTitle className="text-sm font-bold text-white flex items-center gap-2">
             <Activity className="w-4 h-4 text-slate-400" />
@@ -53,8 +56,8 @@ export function TelemetryHUD({
   const isAtEdge = distNorth === 0 || distSouth === 0 || distEast === 0 || distWest === 0;
 
   return (
-    <Card className="w-full bg-rd-navy-card/90 border-rd-navy-border shadow-xl backdrop-blur-md">
-      <CardHeader className="pb-3 border-b border-rd-navy-border/60">
+    <Card className={cn("w-full bg-rd-navy-card/90 border-rd-navy-border shadow-xl backdrop-blur-md flex flex-col", className)}>
+      <CardHeader className="pb-3 border-b border-rd-navy-border/60 flex-shrink-0">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-bold text-white flex items-center gap-2">
             <Activity className="w-4 h-4 text-rd-teal" />
@@ -69,9 +72,9 @@ export function TelemetryHUD({
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="pt-3.5 space-y-3.5 text-xs">
+      <CardContent className="pt-3.5 space-y-3 text-xs flex-1 min-h-0 flex flex-col">
         {/* Painel Central: Coordenadas e Bússola */}
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-2.5 flex-shrink-0">
           {/* Bloco Coordenadas */}
           <div className="bg-rd-navy-dark p-2.5 rounded-xl border border-rd-navy-border flex flex-col justify-between">
             <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
@@ -125,7 +128,7 @@ export function TelemetryHUD({
         </div>
 
         {/* Radar de Borda / Proximidade da Fronteira */}
-        <div className={`p-2.5 rounded-xl border transition-all ${
+        <div className={`p-2.5 rounded-xl border flex-shrink-0 transition-all ${
           isAtEdge
             ? "bg-red-950/40 border-red-500/50"
             : "bg-rd-navy-dark border-rd-navy-border"
@@ -164,21 +167,21 @@ export function TelemetryHUD({
           </div>
         </div>
 
-        {/* Diário de Bordo Recente */}
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
+        {/* Diário de Bordo Recente — Flexível para Preencher o Espaço */}
+        <div className="flex-1 min-h-0 flex flex-col pt-1">
+          <div className="flex items-center justify-between mb-1.5 flex-shrink-0">
             <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
               <Footprints className="w-3 h-3 text-rd-blue" />
               Diário de Telemetria
             </span>
-            <span className="text-[10px] text-slate-500 font-mono">Últimos eventos</span>
+            <span className="text-[10px] text-slate-500 font-mono">Histórico ({pathHistory.length})</span>
           </div>
 
-          <div className="max-h-32 overflow-y-auto space-y-1 pr-1 font-mono text-[11px]">
+          <div className="flex-1 min-h-0 overflow-y-auto space-y-1 pr-1 font-mono text-[11px]">
             {pathHistory.length === 0 ? (
               <p className="text-slate-500 text-[10px]">Aguardando pouso inicial...</p>
             ) : (
-              [...pathHistory].reverse().slice(0, 4).map((step, idx) => (
+              [...pathHistory].reverse().map((step, idx) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between p-1.5 rounded bg-rd-navy-dark border border-rd-navy-border/50 text-[10px]"

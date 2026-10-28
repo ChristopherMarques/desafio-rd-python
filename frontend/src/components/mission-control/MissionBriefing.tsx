@@ -1,26 +1,31 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { cn } from "@/lib/utils";
 import { BookOpen, Compass, ShieldAlert, Sparkles, Terminal } from "lucide-react";
 
-export function MissionBriefing() {
+interface MissionBriefingProps {
+  className?: string;
+}
+
+export function MissionBriefing({ className }: MissionBriefingProps) {
   return (
-    <Card className="w-full border-rd-navy-border/80 bg-rd-navy-card/90 shadow-xl backdrop-blur-md">
-      <CardHeader className="pb-3 border-b border-rd-navy-border/60">
+    <Card className={cn("w-full border-rd-navy-border/80 bg-rd-navy-card/90 shadow-xl backdrop-blur-md flex flex-col", className)}>
+      <CardHeader className="pb-2.5 border-b border-rd-navy-border/60 flex-shrink-0">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-bold tracking-tight text-white flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-rd-blue" />
-            Manual de Operações da Missão
+            Manual de Operações
           </CardTitle>
           <Badge variant="blue" size="sm">
             Guia Rápido
           </Badge>
         </div>
         <CardDescription className="text-[11px] text-slate-400">
-          Entenda como comandar as sondas no planalto marciano e validar as regras do desafio.
+          Comandos e regras operacionais do planalto marciano.
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="pt-3 space-y-3.5 text-xs">
+      <CardContent className="pt-3 space-y-2.5 text-xs flex-1 min-h-0 overflow-y-auto">
         {/* Passo 1: Comandos Básicos */}
         <div className="p-2.5 rounded-lg bg-rd-navy-dark border border-rd-navy-border/70 space-y-1.5">
           <div className="flex items-center gap-1.5 font-bold text-slate-200 text-[11px] uppercase tracking-wider">

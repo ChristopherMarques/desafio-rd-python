@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
+import { cn } from "@/lib/utils";
 import type { ProbeState } from "@/types/probe";
 import { Compass, Plus, Radio, RefreshCw } from "lucide-react";
 
@@ -11,6 +12,7 @@ interface FleetHUDProps {
   onOpenLaunchDialog: () => void;
   onRefreshProbes: () => void;
   isLoading: boolean;
+  className?: string;
 }
 
 export function FleetHUD({
@@ -20,10 +22,11 @@ export function FleetHUD({
   onOpenLaunchDialog,
   onRefreshProbes,
   isLoading,
+  className,
 }: FleetHUDProps) {
   return (
-    <Card className="w-full bg-rd-navy-card/90 border-rd-navy-border shadow-xl backdrop-blur-md">
-      <CardHeader className="pb-3 border-b border-rd-navy-border/60">
+    <Card className={cn("w-full bg-rd-navy-card/90 border-rd-navy-border shadow-xl backdrop-blur-md flex flex-col", className)}>
+      <CardHeader className="pb-3 border-b border-rd-navy-border/60 flex-shrink-0">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-bold text-white flex items-center gap-2">
             <Radio className="w-4 h-4 text-rd-orange" />
@@ -48,7 +51,7 @@ export function FleetHUD({
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="pt-3.5 space-y-2.5">
+      <CardContent className="pt-3.5 space-y-2.5 flex-1 min-h-0 flex flex-col justify-between">
         {probes.length === 0 ? (
           <div className="text-center py-6 border border-dashed border-rd-navy-border rounded-xl">
             <p className="text-xs text-slate-400 mb-2.5">Nenhuma sonda ativa.</p>
@@ -58,7 +61,7 @@ export function FleetHUD({
             </Button>
           </div>
         ) : (
-          <div className="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+          <div className="space-y-1.5 flex-1 min-h-0 overflow-y-auto pr-1">
             {probes.map((probe) => {
               const isSelected = probe.id === activeProbeId;
               return (
@@ -101,7 +104,7 @@ export function FleetHUD({
           variant="outline"
           size="sm"
           onClick={onOpenLaunchDialog}
-          className="w-full h-8 text-xs font-semibold border-dashed text-slate-300 hover:text-white"
+          className="w-full h-8 text-xs font-semibold border-dashed text-slate-300 hover:text-white flex-shrink-0"
         >
           <Plus className="w-3.5 h-3.5" />
           Lançar Nova Sonda

@@ -298,7 +298,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-rd-navy-dark text-slate-100 font-sans">
+    <div className="h-screen max-h-screen flex flex-col bg-rd-navy-dark text-slate-100 font-sans overflow-hidden">
       {/* Cabeçalho Tangram RD Station */}
       <TangramHeader
         apiOnline={apiOnline}
@@ -308,47 +308,48 @@ export function App() {
         activeProbeCount={probes.length}
       />
 
-      {/* Conteúdo Principal do Mission Control em Layout HUD */}
-      <main className="flex-1 max-w-[1600px] w-full mx-auto p-3 sm:p-5 lg:p-6 space-y-4">
-        {/* Grade Principal: HUD Esquerdo | Centro Herói com Cockpit | HUD Direito */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-start">
-          {/* HUD Esquerdo (3 colunas): Frota e Manual de Instruções */}
-          <aside className="lg:col-span-3 space-y-4 order-2 lg:order-1">
-            <FleetHUD
-              probes={probes}
-              activeProbeId={activeProbeId}
-              onSelectProbe={handleSelectProbe}
-              onOpenLaunchDialog={() => setIsLaunchDialogOpen(true)}
-              onRefreshProbes={checkApiAndLoadProbes}
-              isLoading={isLoading}
-            />
+      {/* Conteúdo Principal do Mission Control em Layout HUD Flexível */}
+      <main className="flex-1 min-h-0 w-full max-w-[1750px] mx-auto p-2.5 sm:p-3.5 lg:p-4 grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4 overflow-y-auto lg:overflow-hidden">
+        {/* HUD Esquerdo (3 colunas): Frota e Manual de Instruções */}
+        <aside className="lg:col-span-3 flex flex-col h-full min-h-0 gap-3 order-2 lg:order-1">
+          <FleetHUD
+            probes={probes}
+            activeProbeId={activeProbeId}
+            onSelectProbe={handleSelectProbe}
+            onOpenLaunchDialog={() => setIsLaunchDialogOpen(true)}
+            onRefreshProbes={checkApiAndLoadProbes}
+            isLoading={isLoading}
+            className="flex-shrink-0 max-h-[40%]"
+          />
 
-            <MissionBriefing />
-          </aside>
+          <MissionBriefing className="flex-1 min-h-0" />
+        </aside>
 
-          {/* Centro Herói (6 colunas): Planalto Marciano + Cockpit Dock */}
-          <section className="lg:col-span-6 flex flex-col items-center space-y-3 order-1 lg:order-2">
-            <div className="w-full flex items-center justify-between px-1">
-              <div>
-                <h2 className="text-sm font-extrabold uppercase tracking-wider text-white flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-rd-orange animate-ping" />
-                  Planalto Marciano &bull; Malha Cartesiana
-                </h2>
-                <p className="text-[11px] text-slate-400 font-mono">
-                  Renderização geométrica com Rough.js &bull; Origem (0, 0) canto inferior esquerdo
-                </p>
-              </div>
-
-              {activeProbe && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono font-bold text-rd-blue bg-rd-blue/15 px-2.5 py-1 rounded-lg border border-rd-blue/40 shadow-sketch-blue">
-                    {activeProbe.id}: ({activeProbe.x}, {activeProbe.y}, {activeProbe.direction})
-                  </span>
-                </div>
-              )}
+        {/* Centro Herói (6 colunas): Planalto Marciano + Cockpit Dock */}
+        <section className="lg:col-span-6 flex flex-col h-full min-h-0 gap-2 items-center justify-between order-1 lg:order-2">
+          {/* Barra Superior do Planalto */}
+          <div className="w-full flex items-center justify-between px-1 flex-shrink-0">
+            <div>
+              <h2 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-rd-orange animate-ping" />
+                Planalto Marciano &bull; Malha Cartesiana
+              </h2>
+              <p className="text-[10px] text-slate-400 font-mono">
+                Renderização geométrica com Rough.js &bull; Origem (0, 0) canto inferior esquerdo
+              </p>
             </div>
 
-            {/* O Canvas Central do Planalto */}
+            {activeProbe && (
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono font-bold text-rd-blue bg-rd-blue/15 px-2.5 py-0.5 rounded-lg border border-rd-blue/40 shadow-sketch-blue">
+                  {activeProbe.id}: ({activeProbe.x}, {activeProbe.y}, {activeProbe.direction})
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* O Canvas Central do Planalto — Ocupa o Espaço Central sem Deformar */}
+          <div className="flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden py-0.5">
             <PlateauCanvas
               maxX={plateauMaxX}
               maxY={plateauMaxY}
@@ -356,9 +357,12 @@ export function App() {
               pathHistory={pathHistory}
               allProbes={probes}
               isMoving={isLoading || isSimulating}
+              className="h-full w-auto aspect-square max-h-full"
             />
+          </div>
 
-            {/* Cockpit de Movimentação em Torno da Tela Central */}
+          {/* Cockpit de Movimentação em Torno da Tela Central */}
+          <div className="w-full flex-shrink-0">
             <CockpitDock
               onExecuteCommand={handleExecuteCommand}
               onExecuteSequence={handleExecuteSequence}
@@ -369,18 +373,19 @@ export function App() {
               lastError={lastError}
               onClearError={() => setLastError(null)}
             />
-          </section>
+          </div>
+        </section>
 
-          {/* HUD Direito (3 colunas): Sensores, Bússola e Radar de Borda */}
-          <aside className="lg:col-span-3 space-y-4 order-3">
-            <TelemetryHUD
-              probe={activeProbe}
-              maxX={plateauMaxX}
-              maxY={plateauMaxY}
-              pathHistory={pathHistory}
-            />
-          </aside>
-        </div>
+        {/* HUD Direito (3 colunas): Sensores, Bússola e Radar de Borda */}
+        <aside className="lg:col-span-3 flex flex-col h-full min-h-0 gap-3 order-3">
+          <TelemetryHUD
+            probe={activeProbe}
+            maxX={plateauMaxX}
+            maxY={plateauMaxY}
+            pathHistory={pathHistory}
+            className="flex-1 h-full min-h-0"
+          />
+        </aside>
       </main>
 
       {/* Modal para Lançar Nova Sonda */}

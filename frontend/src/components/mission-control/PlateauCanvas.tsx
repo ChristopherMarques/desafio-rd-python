@@ -1,5 +1,6 @@
 import * as React from "react";
 import rough from "roughjs";
+import { cn } from "@/lib/utils";
 import type { Direction, PathHistoryStep, ProbeState } from "@/types/probe";
 
 interface PlateauCanvasProps {
@@ -9,6 +10,7 @@ interface PlateauCanvasProps {
   pathHistory: PathHistoryStep[];
   allProbes?: ProbeState[];
   isMoving?: boolean;
+  className?: string;
 }
 
 export function PlateauCanvas({
@@ -18,6 +20,7 @@ export function PlateauCanvas({
   pathHistory,
   allProbes = [],
   isMoving = false,
+  className,
 }: PlateauCanvasProps) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
@@ -214,7 +217,10 @@ export function PlateauCanvas({
   return (
     <div
       ref={containerRef}
-      className="relative w-full aspect-square max-w-[560px] mx-auto bg-rd-navy-dark rounded-2xl border-2 border-rd-navy-border p-2 sm:p-3 shadow-2xl flex items-center justify-center overflow-hidden"
+      className={cn(
+        "relative w-auto h-full max-h-full aspect-square mx-auto bg-rd-navy-dark rounded-2xl border-2 border-rd-navy-border p-2 sm:p-3 shadow-2xl flex items-center justify-center overflow-hidden",
+        className
+      )}
     >
       {/* Sci-fi HUD Corner Brackets */}
       <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-rd-blue/60 pointer-events-none" />
