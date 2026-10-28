@@ -23,8 +23,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PATH="/install/bin:${PATH}" \
     PYTHONPATH="/install/lib/python3.12/site-packages:${PYTHONPATH}"
 
-# Usuário sem privilégios de root para segurança operacional
-RUN useradd -u 1000 -m appuser
+# Usuário sem privilégios de root para segurança operacional e pasta de dados
+RUN useradd -u 1000 -m appuser && \
+    mkdir -p /app/data && \
+    chown -R appuser:appuser /app/data
 
 COPY --from=builder /install /install
 COPY --chown=appuser:appuser . .

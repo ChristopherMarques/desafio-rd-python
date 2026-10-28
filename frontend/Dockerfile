@@ -16,27 +16,31 @@ FROM nginx:alpine AS runner
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Configuração do Nginx com suporte a SPA e Proxy reverso para o backend FastAPI
+# Configuração do Nginx com suporte a SPA, DNS dinâmico e Proxy reverso para o backend FastAPI
 RUN echo 'server { \
     listen 80; \
     server_name localhost; \
+    resolver 127.0.0.11 valid=30s ipv6=off; \
     location / { \
         root /usr/share/nginx/html; \
         index index.html index.htm; \
         try_files $uri $uri/ /index.html; \
     } \
     location /probes { \
-        proxy_pass http://backend:8000/probes; \
+        set $backend_upstream http://backend:8000; \
+        proxy_pass $backend_upstream; \
         proxy_set_header Host $host; \
         proxy_set_header X-Real-IP $remote_addr; \
     } \
     location /api/ { \
-        proxy_pass http://backend:8000/api/; \
+        set $backend_upstream http://backend:8000; \
+        proxy_pass $backend_upstream; \
         proxy_set_header Host $host; \
         proxy_set_header X-Real-IP $remote_addr; \
     } \
     location /health { \
-        proxy_pass http://backend:8000/health; \
+        set $backend_upstream http://backend:8000; \
+        proxy_pass $backend_upstream; \
         proxy_set_header Host $host; \
     } \
 }' > /etc/nginx/conf.d/default.conf
