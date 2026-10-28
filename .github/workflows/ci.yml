@@ -64,15 +64,12 @@ jobs:
 
       - name: Instalar Dependências do Frontend
         run: |
-          cd frontend
-          pnpm install --frozen-lockfile || pnpm install
+          pnpm install --no-frozen-lockfile
 
       - name: Executar Testes do Frontend com Vitest
         run: |
-          cd frontend
-          pnpm test
+          pnpm --filter mars-probe-frontend test
 
       - name: Checagem de Tipos e Build
         run: |
-          cd frontend
-          pnpm build
+          pnpm --filter mars-probe-frontend build
