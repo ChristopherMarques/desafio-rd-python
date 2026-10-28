@@ -67,6 +67,11 @@ jobs:
           cd frontend
           pnpm install --frozen-lockfile || pnpm install
 
+      - name: Executar Testes do Frontend com Vitest
+        run: |
+          cd frontend
+          pnpm test
+
       - name: Checagem de Tipos e Build
         run: |
           cd frontend

@@ -56,7 +56,7 @@ desafio-rd-python/
 │   │   ├── schemas/             # Contratos Pydantic de entrada e saída
 │   │   ├── use_cases/           # Casos de uso da aplicação (Launch, Move, List, Get)
 │   │   └── main.py              # Ponto de entrada FastAPI com CORS e documentação
-│   ├── tests/                   # 48 testes automatizados (Unit, Integration e E2E) - 95% coverage
+│   ├── tests/                   # 50 testes automatizados (Unit, Integration e E2E) - 95% coverage
 │   ├── Dockerfile               # Imagem Docker multi-stage otimizada (non-root user)
 │   └── pyproject.toml           # Configurações do projeto, pytest, ruff e mypy
 ├── frontend/                    # Single Page Application React + Vite + TypeScript
@@ -66,6 +66,7 @@ desafio-rd-python/
 │   │   │   └── ui/              # Mini Tangram UI (Button, Card, Badge, Input, Dialog)
 │   │   ├── lib/                 # Cliente HTTP da API, gerador de áudio Web Audio e utilitários
 │   │   ├── types/               # Tipagens TypeScript compartilhadas
+│   │   ├── test/                # Suíte de 10 testes unitários com Vitest e Testing Library
 │   │   ├── App.tsx              # Orquestrador do Mission Control
 │   │   └── main.tsx
 │   ├── Dockerfile               # Multi-stage build com Nginx e SPA rewrite
@@ -74,6 +75,7 @@ desafio-rd-python/
 │   ├── architecture.md          # Visão de arquitetura e por que FastAPI sobre Django
 │   ├── solid-principles.md      # Demonstração detalhada de cada letra do SOLID
 │   ├── api-contracts.md         # Especificação completa de endpoints e respostas da RD Station
+│   ├── security.md              # Práticas de segurança pragmática (OWASP e DoS prevention)
 │   ├── tangram-design-system.md # Conceituação visual do Tangram Sketch e simulador
 │   └── decision-records.md      # Registros de Decisões de Arquitetura (ADRs)
 ├── docker-compose.yml           # Orquestração do Backend (porta 8000) e Frontend (porta 3000)
@@ -150,7 +152,7 @@ Acesse `http://localhost:3000`.
 
 ## 🧪 Testes Automatizados e Qualidade de Código
 
-A suíte de testes cobre testes unitários de domínio, testes de conformidade com o princípio de Liskov e testes de ponta a ponta (E2E) simulando o cliente HTTP.
+A suíte de testes cobre o ecossistema completo: testes unitários de domínio e segurança no backend, e testes unitários de componentes e hooks no frontend com Vitest e Testing Library.
 
 ### Executar Testes no Backend
 
@@ -160,19 +162,28 @@ pytest --cov=app --cov-report=term-missing
 ```
 
 **Resultado dos Testes**:
-* **48 testes aprovados** em ~0.20s.
+* **50 testes aprovados** em ~0.25s.
 * **95% de cobertura total de código**.
+
+### Executar Testes no Frontend
+
+```bash
+cd frontend
+pnpm test
+```
+
+**Resultado dos Testes**:
+* **10 testes aprovados** em ~1.3s com Vitest e React Testing Library.
 
 ### Linters e Checagem Estática de Tipos
 
 ```bash
-cd backend
+# Na raiz do monorepo:
+pnpm lint
 
-# Linter ultrarrápido com Ruff
-ruff check .
-
-# Checagem estática de tipos rigorosa com Mypy
-mypy app
+# Ou individualmente:
+cd backend && ruff check . && mypy app
+cd frontend && pnpm lint
 ```
 
 ### Build do Frontend
@@ -287,6 +298,7 @@ Para ler mais detalhes sobre cada decisão técnica, consulte a pasta [`docs/`](
 * [`docs/architecture.md`](./docs/architecture.md): Detalhamento da arquitetura em camadas e comparação técnica entre FastAPI e Django.
 * [`docs/solid-principles.md`](./docs/solid-principles.md): Análise aprofundada da aplicação dos 5 princípios SOLID no código.
 * [`docs/api-contracts.md`](./docs/api-contracts.md): Especificação completa dos contratos e códigos de retorno da API.
+* [`docs/security.md`](./docs/security.md): Diretrizes de segurança pragmática, OWASP headers e mitigação de DoS.
 * [`docs/tangram-design-system.md`](./docs/tangram-design-system.md): Filosofia de design do Tangram Sketch e componentes construídos.
 * [`docs/decision-records.md`](./docs/decision-records.md): Architectural Decision Records (ADRs) com o histórico de trade-offs.
 
