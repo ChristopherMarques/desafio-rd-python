@@ -214,8 +214,30 @@ export function PlateauCanvas({
   return (
     <div
       ref={containerRef}
-      className="relative w-full aspect-square max-w-[620px] mx-auto bg-rd-navy-dark rounded-2xl border-2 border-rd-navy-border p-2 sm:p-4 shadow-2xl flex items-center justify-center overflow-hidden"
+      className="relative w-full aspect-square max-w-[560px] mx-auto bg-rd-navy-dark rounded-2xl border-2 border-rd-navy-border p-2 sm:p-3 shadow-2xl flex items-center justify-center overflow-hidden"
     >
+      {/* Sci-fi HUD Corner Brackets */}
+      <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-rd-blue/60 pointer-events-none" />
+      <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-rd-blue/60 pointer-events-none" />
+      <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-rd-blue/60 pointer-events-none" />
+      <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-rd-blue/60 pointer-events-none" />
+
+      {/* Floating HUD Badges inside Canvas */}
+      <div className="absolute top-3 left-4 flex items-center gap-2 pointer-events-none z-10">
+        <span className="text-[10px] font-mono font-bold bg-rd-navy-dark/90 text-slate-300 px-2 py-0.5 rounded border border-rd-navy-border backdrop-blur-sm">
+          MALHA: 0..{maxX} &times; 0..{maxY}
+        </span>
+      </div>
+
+      {activeProbe && (
+        <div className="absolute top-3 right-4 flex items-center gap-1.5 pointer-events-none z-10">
+          <span className="text-[10px] font-mono font-bold bg-rd-blue/20 text-blue-300 px-2 py-0.5 rounded border border-rd-blue/40 backdrop-blur-sm flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-rd-blue animate-pulse" />
+            {activeProbe.id}: ({activeProbe.x}, {activeProbe.y}, {activeProbe.direction})
+          </span>
+        </div>
+      )}
+
       <canvas
         ref={canvasRef}
         className="w-full h-full object-contain select-none"

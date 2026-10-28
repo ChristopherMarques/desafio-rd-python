@@ -1,10 +1,11 @@
 import * as React from "react";
-import { CommandConsole } from "@/components/mission-control/CommandConsole";
+import { CockpitDock } from "@/components/mission-control/CockpitDock";
+import { FleetHUD } from "@/components/mission-control/FleetHUD";
 import { LaunchDialog } from "@/components/mission-control/LaunchDialog";
+import { MissionBriefing } from "@/components/mission-control/MissionBriefing";
 import { PlateauCanvas } from "@/components/mission-control/PlateauCanvas";
-import { ProbesSidebar } from "@/components/mission-control/ProbesSidebar";
 import { TangramHeader } from "@/components/mission-control/TangramHeader";
-import { TelemetryPanel } from "@/components/mission-control/TelemetryPanel";
+import { TelemetryHUD } from "@/components/mission-control/TelemetryHUD";
 import { ApiClientError, marsApi } from "@/lib/api";
 import { soundEffects } from "@/lib/sound";
 import type { Direction, LaunchPayload, PathHistoryStep, ProbeState } from "@/types/probe";
@@ -307,28 +308,47 @@ export function App() {
         activeProbeCount={probes.length}
       />
 
-      {/* Conteúdo Principal do Mission Control */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Coluna Esquerda: Planalto Marciano Rough.js (7 colunas) */}
-          <section className="lg:col-span-7 flex flex-col items-center">
-            <div className="w-full mb-3 flex items-center justify-between">
+      {/* Conteúdo Principal do Mission Control em Layout HUD */}
+      <main className="flex-1 max-w-[1600px] w-full mx-auto p-3 sm:p-5 lg:p-6 space-y-4">
+        {/* Grade Principal: HUD Esquerdo | Centro Herói com Cockpit | HUD Direito */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-start">
+          {/* HUD Esquerdo (3 colunas): Frota e Manual de Instruções */}
+          <aside className="lg:col-span-3 space-y-4 order-2 lg:order-1">
+            <FleetHUD
+              probes={probes}
+              activeProbeId={activeProbeId}
+              onSelectProbe={handleSelectProbe}
+              onOpenLaunchDialog={() => setIsLaunchDialogOpen(true)}
+              onRefreshProbes={checkApiAndLoadProbes}
+              isLoading={isLoading}
+            />
+
+            <MissionBriefing />
+          </aside>
+
+          {/* Centro Herói (6 colunas): Planalto Marciano + Cockpit Dock */}
+          <section className="lg:col-span-6 flex flex-col items-center space-y-3 order-1 lg:order-2">
+            <div className="w-full flex items-center justify-between px-1">
               <div>
-                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-200">
-                  Superfície Marciana &bull; Planalto ({plateauMaxX} &times; {plateauMaxY})
+                <h2 className="text-sm font-extrabold uppercase tracking-wider text-white flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-rd-orange animate-ping" />
+                  Planalto Marciano &bull; Malha Cartesiana
                 </h2>
                 <p className="text-[11px] text-slate-400 font-mono">
-                  Renderização geométrica com Rough.js &bull; Coordenadas cartesianas
+                  Renderização geométrica com Rough.js &bull; Origem (0, 0) canto inferior esquerdo
                 </p>
               </div>
 
               {activeProbe && (
-                <span className="text-xs font-mono font-bold text-rd-blue bg-rd-blue/10 px-2.5 py-1 rounded-md border border-rd-blue/30">
-                  {activeProbe.id}: ({activeProbe.x}, {activeProbe.y}, {activeProbe.direction})
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-rd-blue bg-rd-blue/15 px-2.5 py-1 rounded-lg border border-rd-blue/40 shadow-sketch-blue">
+                    {activeProbe.id}: ({activeProbe.x}, {activeProbe.y}, {activeProbe.direction})
+                  </span>
+                </div>
               )}
             </div>
 
+            {/* O Canvas Central do Planalto */}
             <PlateauCanvas
               maxX={plateauMaxX}
               maxY={plateauMaxY}
@@ -337,11 +357,9 @@ export function App() {
               allProbes={probes}
               isMoving={isLoading || isSimulating}
             />
-          </section>
 
-          {/* Coluna Direita: Controles e Telemetria (5 colunas) */}
-          <aside className="lg:col-span-5 space-y-5">
-            <CommandConsole
+            {/* Cockpit de Movimentação em Torno da Tela Central */}
+            <CockpitDock
               onExecuteCommand={handleExecuteCommand}
               onExecuteSequence={handleExecuteSequence}
               onStepByStepSequence={handleStepByStepSequence}
@@ -351,21 +369,15 @@ export function App() {
               lastError={lastError}
               onClearError={() => setLastError(null)}
             />
+          </section>
 
-            <TelemetryPanel
+          {/* HUD Direito (3 colunas): Sensores, Bússola e Radar de Borda */}
+          <aside className="lg:col-span-3 space-y-4 order-3">
+            <TelemetryHUD
               probe={activeProbe}
               maxX={plateauMaxX}
               maxY={plateauMaxY}
               pathHistory={pathHistory}
-            />
-
-            <ProbesSidebar
-              probes={probes}
-              activeProbeId={activeProbeId}
-              onSelectProbe={handleSelectProbe}
-              onOpenLaunchDialog={() => setIsLaunchDialogOpen(true)}
-              onRefreshProbes={checkApiAndLoadProbes}
-              isLoading={isLoading}
             />
           </aside>
         </div>
