@@ -1,5 +1,6 @@
 import * as React from "react";
 import { CockpitDock } from "@/components/mission-control/CockpitDock";
+import { DocsReader } from "@/components/docs/DocsReader";
 import { FleetHUD } from "@/components/mission-control/FleetHUD";
 import { LaunchDialog } from "@/components/mission-control/LaunchDialog";
 import { MissionBriefing } from "@/components/mission-control/MissionBriefing";
@@ -9,8 +10,12 @@ import { TelemetryHUD } from "@/components/mission-control/TelemetryHUD";
 import { ApiClientError, marsApi } from "@/lib/api";
 import { soundEffects } from "@/lib/sound";
 import type { Direction, LaunchPayload, PathHistoryStep, ProbeState } from "@/types/probe";
+import { Activity, BookOpen, Compass, Radio } from "lucide-react";
 
 export function App() {
+  const [currentView, setCurrentView] = React.useState<"mission" | "docs">("mission");
+  const [mobileTab, setMobileTab] = React.useState<"plateau" | "telemetry" | "fleet" | "briefing">("plateau");
+
   const [probes, setProbes] = React.useState<ProbeState[]>([]);
   const [activeProbeId, setActiveProbeId] = React.useState<string | null>(null);
   const [plateauMaxX, setPlateauMaxX] = React.useState<number>(5);
@@ -297,8 +302,13 @@ export function App() {
     setIsSimulating(false);
   };
 
+  // Renderização da Documentação estilo Mintlify
+  if (currentView === "docs") {
+    return <DocsReader onBackToMission={() => setCurrentView("mission")} />;
+  }
+
   return (
-    <div className="h-screen max-h-screen flex flex-col bg-rd-navy-dark text-slate-100 font-sans overflow-hidden">
+    <div className="h-screen max-h-screen flex flex-col bg-tangram-neutral-dark-bg text-slate-100 font-sans overflow-hidden">
       {/* Cabeçalho Tangram RD Station */}
       <TangramHeader
         apiOnline={apiOnline}
@@ -306,86 +316,158 @@ export function App() {
         onToggleSound={() => setSoundEnabled((prev) => !prev)}
         onOpenLaunchDialog={() => setIsLaunchDialogOpen(true)}
         activeProbeCount={probes.length}
+        currentView={currentView}
+        onSwitchView={setCurrentView}
       />
 
-      {/* Conteúdo Principal do Mission Control em Layout HUD Flexível */}
-      <main className="flex-1 min-h-0 w-full max-w-[1750px] mx-auto p-2.5 sm:p-3.5 lg:p-4 grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4 overflow-y-auto lg:overflow-hidden">
-        {/* HUD Esquerdo (3 colunas): Frota e Manual de Instruções */}
-        <aside className="lg:col-span-3 flex flex-col h-full min-h-0 gap-3 order-2 lg:order-1">
-          <FleetHUD
-            probes={probes}
-            activeProbeId={activeProbeId}
-            onSelectProbe={handleSelectProbe}
-            onOpenLaunchDialog={() => setIsLaunchDialogOpen(true)}
-            onRefreshProbes={checkApiAndLoadProbes}
-            isLoading={isLoading}
-            className="flex-shrink-0 max-h-[40%]"
-          />
+      {/* Conteúdo Principal do Mission Control em Layout HUD Flexível e Responsivo */}
+      <main className="flex-1 min-h-0 w-full max-w-[1750px] mx-auto p-2 sm:p-3 lg:p-4 flex flex-col overflow-y-auto lg:overflow-hidden">
+        {/* Barra de Abas Mobile / Tablet (< lg) */}
+        <div className="lg:hidden flex items-center justify-between p-1 bg-tangram-neutral-dark-subtle/90 rounded-xl border border-tangram-neutral-dark-border mb-2.5 flex-shrink-0 text-xs">
+          <button
+            onClick={() => setMobileTab("plateau")}
+            className={`flex-1 py-1.5 px-2 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+              mobileTab === "plateau"
+                ? "bg-tangram-primary text-slate-950 shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Radio className="w-3.5 h-3.5" />
+            <span>Planalto</span>
+          </button>
 
-          <MissionBriefing className="flex-1 min-h-0" />
-        </aside>
+          <button
+            onClick={() => setMobileTab("telemetry")}
+            className={`flex-1 py-1.5 px-2 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+              mobileTab === "telemetry"
+                ? "bg-tangram-primary text-slate-950 shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Activity className="w-3.5 h-3.5" />
+            <span>Telemetria</span>
+          </button>
 
-        {/* Centro Herói (6 colunas): Planalto Marciano + Cockpit Dock */}
-        <section className="lg:col-span-6 flex flex-col h-full min-h-0 gap-2 items-center justify-between order-1 lg:order-2">
-          {/* Barra Superior do Planalto */}
-          <div className="w-full flex items-center justify-between px-1 flex-shrink-0">
-            <div>
-              <h2 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-rd-orange animate-ping" />
-                Planalto Marciano &bull; Malha Cartesiana
-              </h2>
-              <p className="text-[10px] text-slate-400 font-mono">
-                Renderização geométrica com Rough.js &bull; Origem (0, 0) canto inferior esquerdo
-              </p>
+          <button
+            onClick={() => setMobileTab("fleet")}
+            className={`flex-1 py-1.5 px-2 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+              mobileTab === "fleet"
+                ? "bg-tangram-primary text-slate-950 shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Compass className="w-3.5 h-3.5" />
+            <span>Frota ({probes.length})</span>
+          </button>
+
+          <button
+            onClick={() => setMobileTab("briefing")}
+            className={`flex-1 py-1.5 px-2 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
+              mobileTab === "briefing"
+                ? "bg-tangram-primary text-slate-950 shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>Manual</span>
+          </button>
+        </div>
+
+        {/* Grid Principal: HUD Esquerdo | Centro Herói com Cockpit | HUD Direito */}
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4 items-stretch">
+          {/* HUD Esquerdo (3 colunas): Frota e Manual de Instruções */}
+          <aside
+            className={`lg:col-span-3 flex-col h-full min-h-0 gap-3 order-2 lg:order-1 ${
+              mobileTab === "fleet" || mobileTab === "briefing" ? "flex" : "hidden lg:flex"
+            }`}
+          >
+            {(mobileTab === "fleet" || window.innerWidth >= 1024) && (
+              <FleetHUD
+                probes={probes}
+                activeProbeId={activeProbeId}
+                onSelectProbe={handleSelectProbe}
+                onOpenLaunchDialog={() => setIsLaunchDialogOpen(true)}
+                onRefreshProbes={checkApiAndLoadProbes}
+                isLoading={isLoading}
+                className="flex-shrink-0 lg:max-h-[40%]"
+              />
+            )}
+
+            {(mobileTab === "briefing" || window.innerWidth >= 1024) && (
+              <MissionBriefing className="flex-1 min-h-0" />
+            )}
+          </aside>
+
+          {/* Centro Herói (6 colunas): Planalto Marciano + Cockpit Dock */}
+          <section
+            className={`lg:col-span-6 flex-col h-full min-h-0 gap-2 items-center justify-between order-1 lg:order-2 ${
+              mobileTab === "plateau" ? "flex" : "hidden lg:flex"
+            }`}
+          >
+            {/* Barra Superior do Planalto */}
+            <div className="w-full flex items-center justify-between px-1 flex-shrink-0">
+              <div>
+                <h2 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-tangram-support-orange animate-ping" />
+                  Planalto Marciano &bull; Malha Cartesiana
+                </h2>
+                <p className="text-[10px] text-slate-400 font-mono">
+                  Renderização geométrica com Rough.js &bull; Origem (0, 0) canto inferior esquerdo
+                </p>
+              </div>
+
+              {activeProbe && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-tangram-primary bg-tangram-primary/15 px-2.5 py-0.5 rounded-lg border border-tangram-primary/40 shadow-tangram-cyan">
+                    {activeProbe.id}: ({activeProbe.x}, {activeProbe.y}, {activeProbe.direction})
+                  </span>
+                </div>
+              )}
             </div>
 
-            {activeProbe && (
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-rd-blue bg-rd-blue/15 px-2.5 py-0.5 rounded-lg border border-rd-blue/40 shadow-sketch-blue">
-                  {activeProbe.id}: ({activeProbe.x}, {activeProbe.y}, {activeProbe.direction})
-                </span>
-              </div>
-            )}
-          </div>
+            {/* O Canvas Central do Planalto — Ocupa o Espaço Central sem Deformar */}
+            <div className="flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden py-0.5">
+              <PlateauCanvas
+                maxX={plateauMaxX}
+                maxY={plateauMaxY}
+                activeProbe={activeProbe}
+                pathHistory={pathHistory}
+                allProbes={probes}
+                isMoving={isLoading || isSimulating}
+                className="h-full w-auto aspect-square max-h-full"
+              />
+            </div>
 
-          {/* O Canvas Central do Planalto — Ocupa o Espaço Central sem Deformar */}
-          <div className="flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden py-0.5">
-            <PlateauCanvas
+            {/* Cockpit de Movimentação em Torno da Tela Central */}
+            <div className="w-full flex-shrink-0">
+              <CockpitDock
+                onExecuteCommand={handleExecuteCommand}
+                onExecuteSequence={handleExecuteSequence}
+                onStepByStepSequence={handleStepByStepSequence}
+                isLoading={isLoading}
+                isSimulating={isSimulating}
+                disabled={!activeProbe}
+                lastError={lastError}
+                onClearError={() => setLastError(null)}
+              />
+            </div>
+          </section>
+
+          {/* HUD Direito (3 colunas): Sensores, Bússola e Radar de Borda */}
+          <aside
+            className={`lg:col-span-3 flex-col h-full min-h-0 gap-3 order-3 ${
+              mobileTab === "telemetry" ? "flex" : "hidden lg:flex"
+            }`}
+          >
+            <TelemetryHUD
+              probe={activeProbe}
               maxX={plateauMaxX}
               maxY={plateauMaxY}
-              activeProbe={activeProbe}
               pathHistory={pathHistory}
-              allProbes={probes}
-              isMoving={isLoading || isSimulating}
-              className="h-full w-auto aspect-square max-h-full"
+              className="flex-1 h-full min-h-0"
             />
-          </div>
-
-          {/* Cockpit de Movimentação em Torno da Tela Central */}
-          <div className="w-full flex-shrink-0">
-            <CockpitDock
-              onExecuteCommand={handleExecuteCommand}
-              onExecuteSequence={handleExecuteSequence}
-              onStepByStepSequence={handleStepByStepSequence}
-              isLoading={isLoading}
-              isSimulating={isSimulating}
-              disabled={!activeProbe}
-              lastError={lastError}
-              onClearError={() => setLastError(null)}
-            />
-          </div>
-        </section>
-
-        {/* HUD Direito (3 colunas): Sensores, Bússola e Radar de Borda */}
-        <aside className="lg:col-span-3 flex flex-col h-full min-h-0 gap-3 order-3">
-          <TelemetryHUD
-            probe={activeProbe}
-            maxX={plateauMaxX}
-            maxY={plateauMaxY}
-            pathHistory={pathHistory}
-            className="flex-1 h-full min-h-0"
-          />
-        </aside>
+          </aside>
+        </div>
       </main>
 
       {/* Modal para Lançar Nova Sonda */}

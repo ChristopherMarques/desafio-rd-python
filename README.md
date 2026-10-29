@@ -62,12 +62,14 @@ desafio-rd-python/
 ├── frontend/                    # Single Page Application React + Vite + TypeScript
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── mission-control/ # PlateauCanvas (Rough.js), CommandConsole, TelemetryPanel, etc.
+│   │   │   ├── docs/            # DocsReader - Leitor de Documentação estilo Mintlify
+│   │   │   ├── mission-control/ # PlateauCanvas (Rough.js), CockpitDock, TelemetryHUD, FleetHUD
 │   │   │   └── ui/              # Mini Tangram UI (Button, Card, Badge, Input, Dialog)
-│   │   ├── lib/                 # Cliente HTTP da API, gerador de áudio Web Audio e utilitários
+│   │   ├── docs/                # Cópias síncronas dos artigos markdown para runtime web
+│   │   ├── lib/                 # Cliente HTTP da API, áudio Web Audio e utilitários
 │   │   ├── types/               # Tipagens TypeScript compartilhadas
-│   │   ├── test/                # Suíte de 10 testes unitários com Vitest e Testing Library
-│   │   ├── App.tsx              # Orquestrador do Mission Control
+│   │   ├── test/                # Suíte de 15 testes unitários com Vitest e Testing Library
+│   │   ├── App.tsx              # Orquestrador com alternância entre Missão e Docs
 │   │   └── main.tsx
 │   ├── Dockerfile               # Multi-stage build com Nginx e SPA rewrite
 │   └── tailwind.config.js       # Tokens de cor oficiais do Tangram da RD Station
@@ -76,6 +78,7 @@ desafio-rd-python/
 │   ├── solid-principles.md      # Demonstração detalhada de cada letra do SOLID
 │   ├── api-contracts.md         # Especificação completa de endpoints e respostas da RD Station
 │   ├── security.md              # Práticas de segurança pragmática (OWASP e DoS prevention)
+│   ├── deployment.md            # Guia de deploy contínuo no Coolify via GHCR
 │   ├── tangram-design-system.md # Conceituação visual do Tangram Sketch e simulador
 │   └── decision-records.md      # Registros de Decisões de Arquitetura (ADRs)
 ├── docker-compose.yml           # Orquestração do Backend (porta 8000) e Frontend (porta 3000)
@@ -173,7 +176,7 @@ pnpm test
 ```
 
 **Resultado dos Testes**:
-* **10 testes aprovados** em ~1.3s com Vitest e React Testing Library.
+* **15 testes aprovados** em ~1.3s com Vitest e React Testing Library.
 
 ### Linters e Checagem Estática de Tipos
 
