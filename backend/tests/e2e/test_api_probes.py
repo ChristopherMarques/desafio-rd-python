@@ -75,6 +75,35 @@ async def test_api_versioned_routes_parity(async_client: AsyncClient) -> None:
     assert any(p["id"] == probe_id for p in list_res.json()["probes"])
 
 
+async def test_move_probe_flexible_payload_and_alias_routes(
+    async_client: AsyncClient,
+) -> None:
+    """Valida resiliência a convenções alternativas: command no singular, listas e POST/PUT em /probes/{id}."""
+    launch_res = await async_client.post(
+        "/probes",
+        json={"x": 5, "y": 5, "direction": "NORTH"},
+    )
+    assert launch_res.status_code == 201
+    probe_id = launch_res.json()["id"]
+
+    # 1. POST /probes/{id} direto com {"command": "M"} no singular
+    res_alias_post = await async_client.post(
+        f"/probes/{probe_id}",
+        json={"command": "M"},
+    )
+    assert res_alias_post.status_code == 200
+    assert res_alias_post.json()["y"] == 1
+
+    # 2. PUT /probes/{id} com lista ["R", "M"]
+    res_alias_put = await async_client.put(
+        f"/probes/{probe_id}",
+        json={"commands": ["R", "M"]},
+    )
+    assert res_alias_put.status_code == 200
+    assert res_alias_put.json()["x"] == 1
+    assert res_alias_put.json()["direction"] == "EAST"
+
+
 async def test_move_probe_out_of_bounds_returns_422_with_safe_state(
     async_client: AsyncClient,
 ) -> None:
