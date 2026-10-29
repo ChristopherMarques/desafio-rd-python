@@ -3,14 +3,12 @@ import { describe, it, expect, vi } from "vitest";
 import { TangramHeader } from "@/components/mission-control/TangramHeader";
 
 describe("TangramHeader Component", () => {
-  it("renders mission title and active probes counter", () => {
+  it("renders mission title and api status indicator", () => {
     render(
       <TangramHeader
         apiOnline={true}
         soundEnabled={true}
         onToggleSound={vi.fn()}
-        onOpenLaunchDialog={vi.fn()}
-        activeProbeCount={3}
         currentView="mission"
         onSwitchView={vi.fn()}
       />
@@ -18,7 +16,7 @@ describe("TangramHeader Component", () => {
 
     expect(screen.getByText(/Mars Probe/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Mission Control/i).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(/3 sondas/i)).toBeInTheDocument();
+    expect(screen.getByText(/API Online/i)).toBeInTheDocument();
   });
 
   it("handles sound toggle click", () => {
@@ -28,8 +26,6 @@ describe("TangramHeader Component", () => {
         apiOnline={false}
         soundEnabled={true}
         onToggleSound={onToggleSound}
-        onOpenLaunchDialog={vi.fn()}
-        activeProbeCount={1}
         currentView="mission"
         onSwitchView={vi.fn()}
       />
@@ -49,8 +45,6 @@ describe("TangramHeader Component", () => {
         apiOnline={true}
         soundEnabled={true}
         onToggleSound={vi.fn()}
-        onOpenLaunchDialog={vi.fn()}
-        activeProbeCount={1}
         currentView="mission"
         onSwitchView={onSwitchView}
       />

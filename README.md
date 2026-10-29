@@ -15,6 +15,17 @@ O projeto une uma **API RESTful de alta performance em Python (FastAPI)** estrut
 
 ---
 
+## 🌐 Ambientes Publicados em Produção (Live Demo)
+
+O projeto está totalmente implantado e disponível publicamente nos seguintes endereços:
+
+* 🛰️ **Aplicação Web (Mission Control Tangram UI)**: [https://desafio-rd.inspirare.digital/](https://desafio-rd.inspirare.digital/)
+* 📚 **Documentação Interativa da API (Swagger OpenAPI)**: [https://api-desafio-rd.inspirare.digital/docs](https://api-desafio-rd.inspirare.digital/docs)
+* 📖 **Documentação Alternativa da API (Redoc)**: [https://api-desafio-rd.inspirare.digital/redoc](https://api-desafio-rd.inspirare.digital/redoc)
+* 🩺 **Healthcheck da API Backend**: [https://api-desafio-rd.inspirare.digital/health](https://api-desafio-rd.inspirare.digital/health)
+
+---
+
 ## 🧭 Princípio Fundamental de Engenharia
 
 > *"Projete seu código para ser mais fácil de entender, não mais fácil de escrever."*  

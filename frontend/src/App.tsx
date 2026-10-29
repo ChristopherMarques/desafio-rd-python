@@ -1,20 +1,18 @@
 import * as React from "react";
-import { CockpitDock } from "@/components/mission-control/CockpitDock";
 import { DocsReader } from "@/components/docs/DocsReader";
-import { FleetHUD } from "@/components/mission-control/FleetHUD";
 import { LaunchDialog } from "@/components/mission-control/LaunchDialog";
 import { MissionBriefing } from "@/components/mission-control/MissionBriefing";
+import { MissionDeck } from "@/components/mission-control/MissionDeck";
 import { PlateauCanvas } from "@/components/mission-control/PlateauCanvas";
 import { TangramHeader } from "@/components/mission-control/TangramHeader";
-import { TelemetryHUD } from "@/components/mission-control/TelemetryHUD";
 import { ApiClientError, marsApi } from "@/lib/api";
 import { soundEffects } from "@/lib/sound";
 import type { Direction, LaunchPayload, PathHistoryStep, ProbeState } from "@/types/probe";
-import { Activity, BookOpen, Compass, Radio } from "lucide-react";
+import { Activity, BookOpen, Gamepad2 } from "lucide-react";
 
 export function App() {
   const [currentView, setCurrentView] = React.useState<"mission" | "docs">("mission");
-  const [mobileTab, setMobileTab] = React.useState<"plateau" | "telemetry" | "fleet" | "briefing">("plateau");
+  const [mobileTab, setMobileTab] = React.useState<"mission" | "telemetry" | "briefing">("mission");
 
   const [probes, setProbes] = React.useState<ProbeState[]>([]);
   const [activeProbeId, setActiveProbeId] = React.useState<string | null>(null);
@@ -314,26 +312,24 @@ export function App() {
         apiOnline={apiOnline}
         soundEnabled={soundEnabled}
         onToggleSound={() => setSoundEnabled((prev) => !prev)}
-        onOpenLaunchDialog={() => setIsLaunchDialogOpen(true)}
-        activeProbeCount={probes.length}
         currentView={currentView}
         onSwitchView={setCurrentView}
       />
 
-      {/* Conteúdo Principal do Mission Control em Layout HUD Flexível e Responsivo */}
-      <main className="flex-1 min-h-0 w-full max-w-[1750px] mx-auto p-2 sm:p-3 lg:p-4 flex flex-col overflow-y-auto lg:overflow-hidden">
-        {/* Barra de Abas Mobile / Tablet (< lg) */}
-        <div className="lg:hidden flex items-center justify-between p-1 bg-tangram-neutral-dark-subtle/90 rounded-xl border border-tangram-neutral-dark-border mb-2.5 flex-shrink-0 text-xs">
+      {/* Conteúdo Principal: Layout de 2 Zonas Coesas e Funcionais */}
+      <main className="flex-1 min-h-0 w-full max-w-[1720px] mx-auto p-2 sm:p-4 lg:p-5 flex flex-col overflow-y-auto lg:overflow-hidden">
+        {/* Seletor Mobile (< lg): Missão & Controles vs Telemetria vs Manual */}
+        <div className="lg:hidden flex items-center justify-between p-1 bg-tangram-neutral-dark-subtle rounded-xl border border-tangram-neutral-dark-border mb-3 flex-shrink-0 text-xs">
           <button
-            onClick={() => setMobileTab("plateau")}
+            onClick={() => setMobileTab("mission")}
             className={`flex-1 py-1.5 px-2 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
-              mobileTab === "plateau"
+              mobileTab === "mission"
                 ? "bg-tangram-primary text-slate-950 shadow-sm"
                 : "text-slate-400 hover:text-white"
             }`}
           >
-            <Radio className="w-3.5 h-3.5" />
-            <span>Planalto</span>
+            <Gamepad2 className="w-3.5 h-3.5" />
+            <span>Missão & Controles</span>
           </button>
 
           <button
@@ -349,18 +345,6 @@ export function App() {
           </button>
 
           <button
-            onClick={() => setMobileTab("fleet")}
-            className={`flex-1 py-1.5 px-2 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
-              mobileTab === "fleet"
-                ? "bg-tangram-primary text-slate-950 shadow-sm"
-                : "text-slate-400 hover:text-white"
-            }`}
-          >
-            <Compass className="w-3.5 h-3.5" />
-            <span>Frota ({probes.length})</span>
-          </button>
-
-          <button
             onClick={() => setMobileTab("briefing")}
             className={`flex-1 py-1.5 px-2 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all ${
               mobileTab === "briefing"
@@ -373,60 +357,115 @@ export function App() {
           </button>
         </div>
 
-        {/* Grid Principal: HUD Esquerdo | Centro Herói com Cockpit | HUD Direito */}
-        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4 items-stretch">
-          {/* HUD Esquerdo (3 colunas): Frota e Manual de Instruções */}
-          <aside
-            className={`lg:col-span-3 flex-col h-full min-h-0 gap-3 order-2 lg:order-1 ${
-              mobileTab === "fleet" || mobileTab === "briefing" ? "flex" : "hidden lg:flex"
-            }`}
-          >
-            {(mobileTab === "fleet" || window.innerWidth >= 1024) && (
-              <FleetHUD
+        {/* Layout Mobile (< lg): Controles e Canvas na Mesma Tela */}
+        <div className="lg:hidden flex-1 min-h-0 flex flex-col">
+          {mobileTab === "mission" && (
+            <div className="flex-1 min-h-0 flex flex-col gap-2.5 overflow-y-auto pb-2">
+              {/* Barra de Status Compacta Mobile */}
+              <div className="flex items-center justify-between px-1 flex-shrink-0">
+                <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-tangram-primary" />
+                  Planalto Marciano
+                </span>
+                {activeProbe && (
+                  <span className="text-[11px] font-mono font-bold text-tangram-primary bg-tangram-primary/10 px-2 py-0.5 rounded border border-tangram-primary/30">
+                    ({activeProbe.x}, {activeProbe.y}) {activeProbe.direction}
+                  </span>
+                )}
+              </div>
+
+              {/* Canvas Proporcional Compacto no Mobile */}
+              <div className="w-full flex-shrink-0 max-h-[36vh] flex items-center justify-center overflow-hidden">
+                <PlateauCanvas
+                  maxX={plateauMaxX}
+                  maxY={plateauMaxY}
+                  activeProbe={activeProbe}
+                  pathHistory={pathHistory}
+                  allProbes={probes}
+                  isMoving={isLoading || isSimulating}
+                  className="h-full w-auto aspect-square max-h-[36vh]"
+                />
+              </div>
+
+              {/* Controles de Navegação Diretamente na Mesma Tela */}
+              <div className="w-full flex-shrink-0">
+                <MissionDeck
+                  viewMode="controls-only"
+                  probes={probes}
+                  activeProbe={activeProbe}
+                  onSelectProbe={handleSelectProbe}
+                  onOpenLaunchDialog={() => setIsLaunchDialogOpen(true)}
+                  onRefreshProbes={checkApiAndLoadProbes}
+                  onExecuteCommand={handleExecuteCommand}
+                  onExecuteSequence={handleExecuteSequence}
+                  onStepByStepSequence={handleStepByStepSequence}
+                  maxX={plateauMaxX}
+                  maxY={plateauMaxY}
+                  pathHistory={pathHistory}
+                  isLoading={isLoading}
+                  isSimulating={isSimulating}
+                  lastError={lastError}
+                  onClearError={() => setLastError(null)}
+                />
+              </div>
+            </div>
+          )}
+
+          {mobileTab === "telemetry" && (
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              <MissionDeck
+                viewMode="telemetry-only"
                 probes={probes}
-                activeProbeId={activeProbeId}
+                activeProbe={activeProbe}
                 onSelectProbe={handleSelectProbe}
                 onOpenLaunchDialog={() => setIsLaunchDialogOpen(true)}
                 onRefreshProbes={checkApiAndLoadProbes}
+                onExecuteCommand={handleExecuteCommand}
+                onExecuteSequence={handleExecuteSequence}
+                onStepByStepSequence={handleStepByStepSequence}
+                maxX={plateauMaxX}
+                maxY={plateauMaxY}
+                pathHistory={pathHistory}
                 isLoading={isLoading}
-                className="flex-shrink-0 lg:max-h-[40%]"
+                isSimulating={isSimulating}
+                lastError={lastError}
+                onClearError={() => setLastError(null)}
               />
-            )}
+            </div>
+          )}
 
-            {(mobileTab === "briefing" || window.innerWidth >= 1024) && (
-              <MissionBriefing className="flex-1 min-h-0" />
-            )}
-          </aside>
+          {mobileTab === "briefing" && (
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              <MissionBriefing className="h-full" />
+            </div>
+          )}
+        </div>
 
-          {/* Centro Herói (6 colunas): Planalto Marciano + Cockpit Dock */}
-          <section
-            className={`lg:col-span-6 flex-col h-full min-h-0 gap-2 items-center justify-between order-1 lg:order-2 ${
-              mobileTab === "plateau" ? "flex" : "hidden lg:flex"
-            }`}
-          >
-            {/* Barra Superior do Planalto */}
+        {/* Layout Desktop (>= lg): Planalto Herói (7 cols) + Mission Deck Unificado (5 cols) */}
+        <div className="hidden lg:grid flex-1 min-h-0 grid-cols-12 gap-4 items-stretch">
+          {/* Zona 1: Planalto Marciano (Herói) */}
+          <section className="col-span-7 flex flex-col h-full min-h-0 gap-2 items-center justify-between">
+            {/* Barra de Status do Planalto */}
             <div className="w-full flex items-center justify-between px-1 flex-shrink-0">
               <div>
-                <h2 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white flex items-center gap-2">
+                <h2 className="text-sm font-extrabold uppercase tracking-wider text-white flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-tangram-primary" />
-                  Planalto Marciano &bull; Malha Cartesiana
+                  Planalto Marciano
                 </h2>
                 <p className="text-[10px] text-slate-400 font-mono">
-                  Renderização geométrica com Rough.js &bull; Origem (0, 0) canto inferior esquerdo
+                  Malha Cartesiana {plateauMaxX} &times; {plateauMaxY} &bull; Origem (0, 0) canto inferior esquerdo
                 </p>
               </div>
 
               {activeProbe && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono font-bold text-tangram-primary bg-tangram-primary/10 px-2.5 py-0.5 rounded-lg border border-tangram-primary/30">
-                    {activeProbe.id}: ({activeProbe.x}, {activeProbe.y}, {activeProbe.direction})
-                  </span>
-                </div>
+                <span className="text-xs font-mono font-bold text-tangram-primary bg-tangram-primary/10 px-2.5 py-0.5 rounded-lg border border-tangram-primary/30">
+                  {activeProbe.id}: ({activeProbe.x}, {activeProbe.y}, {activeProbe.direction})
+                </span>
               )}
             </div>
 
-            {/* O Canvas Central do Planalto — Ocupa o Espaço Central sem Deformar */}
-            <div className="flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden py-0.5">
+            {/* O Canvas Limpo e Centrado */}
+            <div className="flex-1 min-h-0 w-full flex items-center justify-center overflow-hidden py-1">
               <PlateauCanvas
                 maxX={plateauMaxX}
                 maxY={plateauMaxY}
@@ -437,34 +476,27 @@ export function App() {
                 className="h-full w-auto aspect-square max-h-full"
               />
             </div>
-
-            {/* Cockpit de Movimentação em Torno da Tela Central */}
-            <div className="w-full flex-shrink-0">
-              <CockpitDock
-                onExecuteCommand={handleExecuteCommand}
-                onExecuteSequence={handleExecuteSequence}
-                onStepByStepSequence={handleStepByStepSequence}
-                isLoading={isLoading}
-                isSimulating={isSimulating}
-                disabled={!activeProbe}
-                lastError={lastError}
-                onClearError={() => setLastError(null)}
-              />
-            </div>
           </section>
 
-          {/* HUD Direito (3 colunas): Sensores, Bússola e Radar de Borda */}
-          <aside
-            className={`lg:col-span-3 flex-col h-full min-h-0 gap-3 order-3 ${
-              mobileTab === "telemetry" ? "flex" : "hidden lg:flex"
-            }`}
-          >
-            <TelemetryHUD
-              probe={activeProbe}
+          {/* Zona 2: Deck de Missão Unificado (5 cols) */}
+          <aside className="col-span-5 flex flex-col h-full min-h-0">
+            <MissionDeck
+              viewMode="full"
+              probes={probes}
+              activeProbe={activeProbe}
+              onSelectProbe={handleSelectProbe}
+              onOpenLaunchDialog={() => setIsLaunchDialogOpen(true)}
+              onRefreshProbes={checkApiAndLoadProbes}
+              onExecuteCommand={handleExecuteCommand}
+              onExecuteSequence={handleExecuteSequence}
+              onStepByStepSequence={handleStepByStepSequence}
               maxX={plateauMaxX}
               maxY={plateauMaxY}
               pathHistory={pathHistory}
-              className="flex-1 h-full min-h-0"
+              isLoading={isLoading}
+              isSimulating={isSimulating}
+              lastError={lastError}
+              onClearError={() => setLastError(null)}
             />
           </aside>
         </div>

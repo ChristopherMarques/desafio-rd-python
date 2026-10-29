@@ -1,11 +1,8 @@
 import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
 import {
   BookOpen,
-  Compass,
   FileCode2,
   Github,
-  PlusCircle,
   Radio,
   Volume2,
   VolumeX,
@@ -15,8 +12,6 @@ interface TangramHeaderProps {
   apiOnline: boolean;
   soundEnabled: boolean;
   onToggleSound: () => void;
-  onOpenLaunchDialog: () => void;
-  activeProbeCount: number;
   currentView: "mission" | "docs";
   onSwitchView: (view: "mission" | "docs") => void;
 }
@@ -25,8 +20,6 @@ export function TangramHeader({
   apiOnline,
   soundEnabled,
   onToggleSound,
-  onOpenLaunchDialog,
-  activeProbeCount,
   currentView,
   onSwitchView,
 }: TangramHeaderProps) {
@@ -89,25 +82,19 @@ export function TangramHeader({
           </div>
         </div>
 
-        {/* Lado Direito: Status, Áudio, Swagger e CTA */}
+        {/* Lado Direito: Status, Áudio, Swagger e GitHub */}
         <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
           {/* Status da API Backend */}
-          <div className="hidden lg:flex items-center gap-2 bg-tangram-neutral-dark-bg px-2.5 py-1 rounded-lg border border-tangram-neutral-dark-border text-xs">
+          <div className="flex items-center gap-2 bg-tangram-neutral-dark-bg px-2.5 py-1 rounded-lg border border-tangram-neutral-dark-border text-xs">
             <span
               className={`w-2 h-2 rounded-full ${
                 apiOnline ? "bg-tangram-success" : "bg-tangram-warning"
               }`}
             />
             <span className="font-mono text-[11px] text-slate-300">
-              {apiOnline ? "API Online (8000)" : "Simulador Local"}
+              {apiOnline ? "API Online" : "Simulador Local"}
             </span>
           </div>
-
-          {/* Sondas Ativas Badge */}
-          <Badge variant="teal" size="sm" className="hidden sm:inline-flex text-[11px]">
-            <Compass className="w-3 h-3" />
-            {activeProbeCount} {activeProbeCount === 1 ? "sonda" : "sondas"}
-          </Badge>
 
           {/* Som Toggle */}
           <button
@@ -151,18 +138,6 @@ export function TangramHeader({
             <Github className="w-3.5 h-3.5" />
             <span className="hidden md:inline text-[11px]">Repo</span>
           </a>
-
-          {/* Nova Sonda CTA */}
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={onOpenLaunchDialog}
-            className="h-8 px-2.5 sm:px-3 text-xs font-bold whitespace-nowrap bg-tangram-primary text-slate-950 hover:bg-tangram-primary-hover shadow-tangram-cyan"
-          >
-            <PlusCircle className="w-3.5 h-3.5" />
-            <span className="hidden xs:inline">Lançar Sonda</span>
-            <span className="xs:hidden">Lançar</span>
-          </Button>
         </div>
       </div>
     </header>
