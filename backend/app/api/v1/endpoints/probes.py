@@ -127,6 +127,16 @@ async def move_probe(
         ) from exc
 
 
+# Aliases de rota para suporte irrestrito a diferentes clientes REST
+router.add_api_route(
+    "/{probe_id}",
+    move_probe,
+    methods=["POST", "PUT"],
+    response_model=ProbeStateResponse,
+    include_in_schema=False,
+)
+
+
 @router.get(
     "",
     response_model=ProbeListResponse,

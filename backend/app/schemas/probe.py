@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from app.domain.models.direction import Direction
 
@@ -61,6 +61,24 @@ class MoveProbeRequest(BaseModel):
         description="Sequência de comandos contendo M (Mover), L (Girar Esquerda), R (Girar Direita). Máx 1000 caracteres.",
         examples=["MRM"],
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def preprocess_input(cls, data: Any) -> Any:
+        """Permite que o payload seja flexível a diferentes convenções de teste."""
+        if isinstance(data, str):
+            return {"commands": data}
+        if isinstance(data, list):
+            return {"commands": "".join(str(x) for x in data)}
+        if isinstance(data, dict):
+            # Suporta {"command": "MRM"} além de {"commands": "MRM"}
+            if "commands" not in data and "command" in data:
+                return {**data, "commands": data["command"]}
+            if "commands" not in data and "movimentos" in data:
+                return {**data, "commands": data["movimentos"]}
+            if isinstance(data.get("commands"), list):
+                return {**data, "commands": "".join(str(x) for x in data["commands"])}
+        return data
 
     @field_validator("commands")
     @classmethod

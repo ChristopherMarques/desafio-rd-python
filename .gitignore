@@ -59,3 +59,7 @@ dist-ssr/
 # OS
 .DS_Store
 Thumbs.db
+
+# Private Challenge Briefing & Job Specs
+descricao-vaga.txt
+regras-desafio.md

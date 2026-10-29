@@ -74,7 +74,7 @@ export function ProbesSidebar({
                         {probe.id}
                       </span>
                       {isSelected && (
-                        <span className="w-2 h-2 rounded-full bg-rd-blue animate-ping" />
+                        <span className="w-2 h-2 rounded-full bg-rd-blue" />
                       )}
                     </div>
                     <p className="text-[11px] text-slate-400 font-mono mt-0.5">

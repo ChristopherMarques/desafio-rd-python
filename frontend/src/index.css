@@ -4,15 +4,21 @@
 
 @layer base {
   :root {
-    --color-rd-blue: #0073FF;
-    --color-rd-navy: #19212C;
-    --color-rd-orange: #F25C05;
-    --color-rd-teal: #00B37E;
+    --tangram-primary: #00DBFF;
+    --tangram-primary-text: #0077B2;
+    --tangram-surface-inverse: #002233;
+    --tangram-dark-bg: #001824;
+    --tangram-dark-card: #002233;
+    --tangram-dark-border: #003E5C;
+    --tangram-success: #0ED869;
+    --tangram-warning: #FFBD28;
+    --tangram-danger: #E60F57;
+    --tangram-orange: #FF8900;
   }
 
   body {
-    background-color: #0C111A;
-    color: #F8FAFC;
+    background-color: #001824;
+    color: #FFFFFF;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }
@@ -24,14 +30,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #151C26;
+  background: #001E2E;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #243042;
+  background: #003E5C;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #005A84;
 }
