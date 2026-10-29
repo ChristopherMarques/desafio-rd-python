@@ -137,7 +137,7 @@ export function CommandConsole({
               className="flex flex-col items-center justify-center h-16 p-1 border-2 border-blue-400"
               title="Avançar 1 espaço à frente (M ou Tecla W/Seta Cima)"
             >
-              <ArrowUp className="w-6 h-6 text-white animate-bounce" />
+              <ArrowUp className="w-6 h-6 text-white" />
               <span className="text-[10px] font-mono mt-0.5 font-bold">M (Avançar)</span>
             </Button>
 

@@ -136,7 +136,7 @@ export function TelemetryHUD({
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1 text-slate-300">
               {isAtEdge ? (
-                <AlertOctagon className="w-3.5 h-3.5 text-red-400 animate-pulse" />
+                <AlertOctagon className="w-3.5 h-3.5 text-red-400" />
               ) : (
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
               )}

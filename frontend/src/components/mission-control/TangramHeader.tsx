@@ -95,9 +95,7 @@ export function TangramHeader({
           <div className="hidden lg:flex items-center gap-2 bg-tangram-neutral-dark-bg px-2.5 py-1 rounded-lg border border-tangram-neutral-dark-border text-xs">
             <span
               className={`w-2 h-2 rounded-full ${
-                apiOnline
-                  ? "bg-tangram-success shadow-[0_0_8px_rgba(14,216,105,0.8)] animate-pulse"
-                  : "bg-tangram-warning"
+                apiOnline ? "bg-tangram-success" : "bg-tangram-warning"
               }`}
             />
             <span className="font-mono text-[11px] text-slate-300">

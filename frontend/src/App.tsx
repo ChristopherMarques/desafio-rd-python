@@ -408,7 +408,7 @@ export function App() {
             <div className="w-full flex items-center justify-between px-1 flex-shrink-0">
               <div>
                 <h2 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-tangram-support-orange animate-ping" />
+                  <span className="w-2 h-2 rounded-full bg-tangram-primary" />
                   Planalto Marciano &bull; Malha Cartesiana
                 </h2>
                 <p className="text-[10px] text-slate-400 font-mono">
@@ -418,7 +418,7 @@ export function App() {
 
               {activeProbe && (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono font-bold text-tangram-primary bg-tangram-primary/15 px-2.5 py-0.5 rounded-lg border border-tangram-primary/40 shadow-tangram-cyan">
+                  <span className="text-xs font-mono font-bold text-tangram-primary bg-tangram-primary/10 px-2.5 py-0.5 rounded-lg border border-tangram-primary/30">
                     {activeProbe.id}: ({activeProbe.x}, {activeProbe.y}, {activeProbe.direction})
                   </span>
                 </div>

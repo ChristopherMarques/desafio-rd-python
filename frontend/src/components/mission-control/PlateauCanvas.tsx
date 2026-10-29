@@ -222,23 +222,23 @@ export function PlateauCanvas({
         className
       )}
     >
-      {/* Sci-fi HUD Corner Brackets */}
-      <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-rd-blue/60 pointer-events-none" />
-      <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-rd-blue/60 pointer-events-none" />
-      <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-rd-blue/60 pointer-events-none" />
-      <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-rd-blue/60 pointer-events-none" />
+      {/* Subtle Corner Markers */}
+      <div className="absolute top-2.5 left-2.5 w-3 h-3 border-t border-l border-tangram-primary/40 pointer-events-none" />
+      <div className="absolute top-2.5 right-2.5 w-3 h-3 border-t border-r border-tangram-primary/40 pointer-events-none" />
+      <div className="absolute bottom-2.5 left-2.5 w-3 h-3 border-b border-l border-tangram-primary/40 pointer-events-none" />
+      <div className="absolute bottom-2.5 right-2.5 w-3 h-3 border-b border-r border-tangram-primary/40 pointer-events-none" />
 
       {/* Floating HUD Badges inside Canvas */}
       <div className="absolute top-3 left-4 flex items-center gap-2 pointer-events-none z-10">
-        <span className="text-[10px] font-mono font-bold bg-rd-navy-dark/90 text-slate-300 px-2 py-0.5 rounded border border-rd-navy-border backdrop-blur-sm">
-          MALHA: 0..{maxX} &times; 0..{maxY}
+        <span className="text-[10px] font-mono font-medium bg-tangram-neutral-dark-card/90 text-slate-300 px-2 py-0.5 rounded border border-tangram-neutral-dark-border backdrop-blur-sm">
+          0..{maxX} &times; 0..{maxY}
         </span>
       </div>
 
       {activeProbe && (
         <div className="absolute top-3 right-4 flex items-center gap-1.5 pointer-events-none z-10">
-          <span className="text-[10px] font-mono font-bold bg-rd-blue/20 text-blue-300 px-2 py-0.5 rounded border border-rd-blue/40 backdrop-blur-sm flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-rd-blue animate-pulse" />
+          <span className="text-[10px] font-mono font-semibold bg-tangram-neutral-dark-card/90 text-tangram-primary px-2 py-0.5 rounded border border-tangram-primary/40 backdrop-blur-sm flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-tangram-primary" />
             {activeProbe.id}: ({activeProbe.x}, {activeProbe.y}, {activeProbe.direction})
           </span>
         </div>
